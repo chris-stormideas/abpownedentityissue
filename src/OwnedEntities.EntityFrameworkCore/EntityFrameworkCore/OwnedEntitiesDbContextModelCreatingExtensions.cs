@@ -22,6 +22,17 @@ namespace OwnedEntities.EntityFrameworkCore
             //    //...
             //});
             
+            builder.Entity<Order>(b =>
+            {
+                b.ToTable(OwnedEntitiesConsts.DbTablePrefix + "Orders", OwnedEntitiesConsts.DbSchema);
+                
+                b.ConfigureByConvention();
+                b.TryConfigureFullAudited();
+                
+                b.OwnsMany(x => x.OrderLines)
+                    .WithOwner()
+                    .HasForeignKey(x => x.OrderId);
+            });
         }
 
         public static void ConfigureCustomUserProperties<TUser>(this EntityTypeBuilder<TUser> b)
